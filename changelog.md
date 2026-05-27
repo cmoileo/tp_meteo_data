@@ -1,5 +1,11 @@
 # Change Log
 
+## [0.3]
+
+### Added
+- Query functions (`query.go`): FilterByCountry, AvgTemperature, MaxWindGust, CountByCountry
+- Explore CLI (`cmd/explore/main.go`) with coherence check and demo queries
+
 ## [0.2]
 
 ### Added
