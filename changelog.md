@@ -1,5 +1,10 @@
 # Change Log
 
+## [0.2]
+
+### Added
+- XML parser (`LoadFromXML`) with measure type/pollutant name dispatching and optional note handling
+
 ## [0.1]
 
 ### Added
