@@ -28,5 +28,7 @@ func main() {
 	mux.HandleFunc("GET /stations/{id}", app.getStation)
 	mux.HandleFunc("POST /stations", app.createStation)
 	mux.HandleFunc("PUT /stations/{id}", app.updateStation)
+	mux.HandleFunc("GET /stations/{id}/observations", app.listObservations)
+	mux.HandleFunc("DELETE /stations/{id}", app.deleteStation)
 	http.ListenAndServe(":8080", mux)
 }

@@ -29,8 +29,13 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 	json.NewEncoder(w).Encode(v)
 }
 
-func writeError(w http.ResponseWriter, status int, msg string) {
-	writeJSON(w, status, map[string]string{"error": msg})
+type ErrorResponse struct {
+	Error string `json:"error"`
+	Code  string `json:"code,omitempty"`
+}
+
+func writeError(w http.ResponseWriter, status int, code, msg string) {
+	writeJSON(w, status, ErrorResponse{Error: msg, Code: code})
 }
 
 func (a *App) listStations(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +47,7 @@ func (a *App) getStation(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	st, ok := a.store.Get(id)
 	if !ok {
-		writeError(w, http.StatusNotFound, "station not found")
+		writeError(w, http.StatusNotFound, "NOT_FOUND", "station not found")
 		return
 	}
 	writeJSON(w, http.StatusOK, st)
@@ -51,12 +56,12 @@ func (a *App) getStation(w http.ResponseWriter, r *http.Request) {
 func (a *App) createStation(w http.ResponseWriter, r *http.Request) {
 	var req createStationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid JSON")
+		writeError(w, http.StatusBadRequest, "BAD_JSON", "invalid JSON")
 		return
 	}
 
 	if a.store.Has(req.ID) {
-		writeError(w, http.StatusConflict, "station already exists")
+		writeError(w, http.StatusConflict, "ID_TAKEN", "station already exists")
 		return
 	}
 
@@ -75,7 +80,7 @@ func (a *App) updateStation(w http.ResponseWriter, r *http.Request) {
 
 	var req updateStationRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		writeError(w, http.StatusBadRequest, "invalid JSON")
+		writeError(w, http.StatusBadRequest, "BAD_JSON", "invalid JSON")
 		return
 	}
 
@@ -95,4 +100,23 @@ func (a *App) updateStation(w http.ResponseWriter, r *http.Request) {
 		a.store.Put(st)
 		writeJSON(w, http.StatusCreated, st)
 	}
+}
+
+func (a *App) listObservations(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	st, ok := a.store.Get(id)
+	if !ok {
+		writeError(w, http.StatusNotFound, "NOT_FOUND", "station not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, st.Observations)
+}
+
+func (a *App) deleteStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	if !a.store.Delete(id) {
+		writeError(w, http.StatusNotFound, "NOT_FOUND", "station not found")
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
 }
