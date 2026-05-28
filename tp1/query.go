@@ -1,4 +1,4 @@
-package weather
+package tp1
 
 func FilterByCountry(stations []Station, iso string) []Station {
 	var result []Station

@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
-	"tp_meteo_data/weather"
+	"tp_meteo_data/tp1"
 )
 
 type createStationRequest struct {
@@ -60,7 +60,7 @@ func (a *App) createStation(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	st := weather.Station{
+	st := tp1.Station{
 		ID:       req.ID,
 		Name:     req.Name,
 		Country:  req.Country,
@@ -86,7 +86,7 @@ func (a *App) updateStation(w http.ResponseWriter, r *http.Request) {
 		a.store.Put(existing)
 		writeJSON(w, http.StatusOK, existing)
 	} else {
-		st := weather.Station{
+		st := tp1.Station{
 			ID:       id,
 			Name:     req.Name,
 			Country:  req.Country,

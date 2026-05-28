@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	"log"
-	"tp_meteo_data/weather"
+	"tp_meteo_data/tp1"
 )
 
 func main() {
-	jsonStations, err := weather.LoadFromJSON("datas/meteo_datas.json")
+	jsonStations, err := tp1.LoadFromJSON("datas/meteo_datas.json")
 	if err != nil {
 		log.Fatalf("JSON: %v", err)
 	}
-	xmlStations, err := weather.LoadFromXML("datas/meteo_datas.xml")
+	xmlStations, err := tp1.LoadFromXML("datas/meteo_datas.xml")
 	if err != nil {
 		log.Fatalf("XML: %v", err)
 	}
@@ -34,20 +34,20 @@ func main() {
 		fmt.Println("Cohérence : KO")
 	}
 
-	station, gust := weather.MaxWindGust(jsonStations)
+	station, gust := tp1.MaxWindGust(jsonStations)
 	fmt.Printf("Station la plus ventée : %s (%.1f km/h)\n", station.ID, gust)
 
-	bordeaux := weather.FilterByCountry(jsonStations, "FR")
-	var bordeauxStation weather.Station
+	bordeaux := tp1.FilterByCountry(jsonStations, "FR")
+	var bordeauxStation tp1.Station
 	for _, s := range bordeaux {
 		if s.ID == "FR-BOR-001" {
 			bordeauxStation = s
 			break
 		}
 	}
-	avg := weather.AvgTemperature(bordeauxStation)
+	avg := tp1.AvgTemperature(bordeauxStation)
 	fmt.Printf("Temp. moyenne Bordeaux Mérignac : %.1f °C\n", avg)
 
-	byCountry := weather.CountByCountry(jsonStations)
+	byCountry := tp1.CountByCountry(jsonStations)
 	fmt.Printf("Stations par pays : %v\n", byCountry)
 }

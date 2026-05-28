@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"tp_meteo_data/weather"
+	"tp_meteo_data/tp1"
 )
 
 func main() {
-	stations, err := weather.LoadFromJSON("weather_data.json")
+	stations, err := tp1.LoadFromJSON("weather_data.json")
 	if err != nil {
 		log.Fatal(err)
 	}

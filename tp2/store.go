@@ -1,16 +1,16 @@
 package main
 
-import "tp_meteo_data/weather"
+import "tp_meteo_data/tp1"
 
 type Store struct {
-	stations map[string]weather.Station
+	stations map[string]tp1.Station
 }
 
 func NewStore() *Store {
-	return &Store{stations: make(map[string]weather.Station)}
+	return &Store{stations: make(map[string]tp1.Station)}
 }
 
-func (s *Store) Put(st weather.Station) {
+func (s *Store) Put(st tp1.Station) {
 	s.stations[st.ID] = st
 }
 
@@ -19,7 +19,7 @@ func (s *Store) Has(id string) bool {
 	return ok
 }
 
-func (s *Store) Get(id string) (weather.Station, bool) {
+func (s *Store) Get(id string) (tp1.Station, bool) {
 	st, ok := s.stations[id]
 	return st, ok
 }
@@ -32,8 +32,8 @@ func (s *Store) Delete(id string) bool {
 	return true
 }
 
-func (s *Store) All() []weather.Station {
-	all := make([]weather.Station, 0, len(s.stations))
+func (s *Store) All() []tp1.Station {
+	all := make([]tp1.Station, 0, len(s.stations))
 	for _, st := range s.stations {
 		all = append(all, st)
 	}

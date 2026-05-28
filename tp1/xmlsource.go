@@ -1,4 +1,4 @@
-package weather
+package tp1
 
 import (
 	"encoding/xml"
