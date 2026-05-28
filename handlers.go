@@ -13,6 +13,12 @@ type createStationRequest struct {
 	Altitude int16  `json:"altitude"`
 }
 
+type updateStationRequest struct {
+	Name     string `json:"name"`
+	Country  string `json:"country_code"`
+	Altitude int16  `json:"altitude"`
+}
+
 type App struct {
 	store *Store
 }
@@ -62,4 +68,31 @@ func (a *App) createStation(w http.ResponseWriter, r *http.Request) {
 	}
 	a.store.Put(st)
 	writeJSON(w, http.StatusCreated, st)
+}
+
+func (a *App) updateStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+
+	var req updateStationRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		writeError(w, http.StatusBadRequest, "invalid JSON")
+		return
+	}
+
+	if existing, ok := a.store.Get(id); ok {
+		existing.Name = req.Name
+		existing.Country = req.Country
+		existing.Altitude = req.Altitude
+		a.store.Put(existing)
+		writeJSON(w, http.StatusOK, existing)
+	} else {
+		st := weather.Station{
+			ID:       id,
+			Name:     req.Name,
+			Country:  req.Country,
+			Altitude: req.Altitude,
+		}
+		a.store.Put(st)
+		writeJSON(w, http.StatusCreated, st)
+	}
 }
