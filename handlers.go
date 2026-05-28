@@ -23,3 +23,13 @@ func (a *App) listStations(w http.ResponseWriter, r *http.Request) {
 	stations := a.store.All()
 	writeJSON(w, http.StatusOK, stations)
 }
+
+func (a *App) getStation(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	st, ok := a.store.Get(id)
+	if !ok {
+		writeError(w, http.StatusNotFound, "station not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, st)
+}
